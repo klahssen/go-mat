@@ -81,6 +81,11 @@ func (m *M64) At(i, j int) float64 {
 	return m.data[m.index(i, j)]
 }
 
+//AtInd returns the value at index ind. panics if m is nil or index out of range
+func (m *M64) AtInd(ind int) float64 {
+	return m.data[ind]
+}
+
 //Set sets val at position row=i,col=j. panics if m is nil or index out of range
 func (m *M64) Set(i, j int, val float64) {
 	m.data[m.index(i, j)] = val
