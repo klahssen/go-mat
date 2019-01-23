@@ -79,8 +79,23 @@ func TestDotSize(t *testing.T) {
 
 }
 
-func testError(t *testing.T, testInd int, exp, err error) {
-	if (exp != nil && err == nil) || (exp == nil && err != nil) || (err != nil && err.Error() != exp.Error()) {
-		t.Errorf("test %d: expected %v received %v", testInd, exp, err)
+func TestTransposeSize(t *testing.T) {
+	tests := []struct {
+		m    *M64
+		dest *M64
+		err  error
+	}{
+		{NewM64(3, 3, nil), NewM64(3, 3, nil), nil},
+		{nil, NewM64(3, 3, nil), fmt.Errorf("m is nil")},
+		{NewM64(3, 3, nil), nil, fmt.Errorf("dest is nil")},
+		{NewM64(3, 2, nil), NewM64(3, 2, nil), fmt.Errorf("m rows != dest colomns")},
+		{NewM64(3, 2, nil), NewM64(3, 3, nil), fmt.Errorf("m colomns != dest rows")},
+		{NewM64(3, 2, nil), NewM64(2, 3, nil), nil},
 	}
+	te := tester.New(t)
+	for ind, test := range tests {
+		err := inverseSize(test.m, test.dest)
+		te.CompareError(ind, test.err, err)
+	}
+
 }
