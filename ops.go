@@ -49,3 +49,13 @@ func MapElem(m *M64, fn func(x float64) float64) (*M64, error) {
 	}
 	return res, nil
 }
+
+//Transpose returns a new matrix as the transpose of m
+func Transpose(m *M64) (*M64, error) {
+	r, c := m.Dims()
+	res := NewM64(c, r, nil)
+	if err := transpose(m, res); err != nil {
+		return nil, err
+	}
+	return res, nil
+}

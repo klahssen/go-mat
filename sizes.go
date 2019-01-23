@@ -48,6 +48,7 @@ func sameSize(m, n, dest *M64) error {
 	}
 	return nil
 }
+
 func sameSize2(m, dest *M64) error {
 	if !m.Valid() {
 		return fmt.Errorf("m is nil")
@@ -61,6 +62,23 @@ func sameSize2(m, dest *M64) error {
 	}
 	if m.c != dest.c {
 		return fmt.Errorf("m,dest colomns not equal")
+	}
+	return nil
+}
+
+func inverseSize(m, dest *M64) error {
+	if !m.Valid() {
+		return fmt.Errorf("m is nil")
+	}
+	if !dest.Valid() {
+		return fmt.Errorf("dest is nil")
+	}
+
+	if m.r != dest.c {
+		return fmt.Errorf("m rows != dest colomns")
+	}
+	if m.c != dest.r {
+		return fmt.Errorf("m colomns != dest rows")
 	}
 	return nil
 }

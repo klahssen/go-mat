@@ -36,6 +36,31 @@ func TestSmallAdd(t *testing.T) {
 	}
 }
 
+func TestSmallTranspose(t *testing.T) {
+	te := tester.New(t)
+	tests := []struct {
+		m    *M64
+		dest *M64
+		res  *M64
+		err  error
+	}{
+		{NewM64(3, 3, nil), NewM64(3, 3, nil), NewM64(3, 3, nil), nil},
+		{nil, NewM64(3, 3, nil), nil, fmt.Errorf("m is nil")},
+		{NewM64(3, 3, nil), nil, nil, fmt.Errorf("dest is nil")},
+		{NewM64(3, 2, nil), NewM64(3, 2, nil), NewM64(2, 3, nil), fmt.Errorf("m rows != dest colomns")},
+		{NewM64(3, 2, nil), NewM64(3, 3, nil), NewM64(2, 3, nil), fmt.Errorf("m colomns != dest rows")},
+		{NewM64(3, 2, []float64{1, 2, 3, 4, 5, 6}), NewM64(2, 3, nil), NewM64(2, 3, []float64{1, 3, 5, 2, 4, 6}), nil},
+	}
+
+	for ind, test := range tests {
+		err := transpose(test.m, test.dest)
+		te.CompareError(ind, test.err, err)
+		if err == nil {
+			te.DeepEqual(ind, "res", test.res, test.dest)
+		}
+	}
+}
+
 func TestSmallSub(t *testing.T) {
 	te := tester.New(t)
 	tests := []struct {
@@ -65,7 +90,7 @@ func TestSmallSub(t *testing.T) {
 	}
 }
 
-func TestSmallDotProd(t *testing.T) {
+func TestSmallMul(t *testing.T) {
 	te := tester.New(t)
 	tests := []struct {
 		m    *M64
@@ -103,7 +128,7 @@ func TestSmallDotProd(t *testing.T) {
 	*/
 }
 
-func BenchmarkSmallDotProd500x500x1(b *testing.B) {
+func BenchmarkSmallMul500x500x1(b *testing.B) {
 	r, c, c2 := 500, 500, 1
 	data := make([]float64, r*c)
 	for i := 0; i < r*c; i++ {

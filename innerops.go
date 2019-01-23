@@ -38,6 +38,19 @@ func mul(m, n, dest *M64) error {
 	return nil
 }
 
+func transpose(m, dest *M64) error {
+	if err := inverseSize(m, dest); err != nil {
+		return err
+	}
+	r, c := m.Dims()
+	for i := 0; i < r; i++ {
+		for j := 0; j < c; j++ {
+			dest.Set(j, i, m.At(i, j))
+		}
+	}
+	return nil
+}
+
 //element wise multiplication
 func mulElem(m, n, dest *M64) error {
 	if err := sameSize(m, n, dest); err != nil {
