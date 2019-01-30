@@ -1,5 +1,7 @@
 package mat
 
+import "fmt"
+
 //mat "gonum.org/v1/gonum/mat"
 
 /*
@@ -114,4 +116,25 @@ func (m *M64) MapElem(fn func(x float64) float64) error {
 //AtInd returns the value at index ind. panics if m is nil or index out of range
 func (m *M64) AtInd(ind int) float64 {
 	return m.data[ind]
+}
+
+//GetData returns inner matrix
+func (m *M64) GetData() []float64 {
+	if m == nil {
+		return nil
+	}
+	return m.data
+}
+
+//SetData sets inner matrix
+func (m *M64) SetData(data []float64) error {
+	if m == nil {
+		return fmt.Errorf("matrix is nil")
+	}
+	exp := m.Size()
+	if len(data) != exp {
+		return fmt.Errorf("data must have %d values", exp)
+	}
+	m.data = data
+	return nil
 }
