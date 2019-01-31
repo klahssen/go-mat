@@ -12,15 +12,19 @@ func useless() *mat.Dense {
 
 //M64 represents a float64 matrix with r rows and c colomns
 type M64 struct {
-	r    int
-	c    int
-	data []float64
+	r          int
+	c          int
+	data       []float64
+	transposed bool
 }
 
 //Dims returns the number of rows and colomns
 func (m *M64) Dims() (int, int) {
 	if m == nil {
 		return 0, 0
+	}
+	if m.transposed {
+		return m.c, m.r
 	}
 	return m.r, m.c
 }
@@ -68,12 +72,29 @@ func (m *M64) Valid() bool {
 	return true
 }
 
+//Transpose will set m as the transpose(m) without altering data
+func (m *M64) Transpose() {
+	if m != nil {
+		m.transposed = true
+	}
+}
+
+//DeTranspose will set back to not transposed
+func (m *M64) DeTranspose() {
+	if m != nil {
+		m.transposed = false
+	}
+}
+
 func (m *M64) index(i, j int) int {
+	if m == nil {
+		return 0
+	}
 	if i < 0 || j < 0 {
 		return 0
 	}
-	if i == 0 {
-		return j
+	if m.transposed {
+		j, i = i, j
 	}
 	return m.c*i + j
 }
@@ -86,6 +107,24 @@ func (m *M64) At(i, j int) float64 {
 //Set sets val at position row=i,col=j. panics if m is nil or index out of range
 func (m *M64) Set(i, j int, val float64) {
 	m.data[m.index(i, j)] = val
+}
+
+//GetData returns the inner slice
+func (m *M64) GetData() []float64 {
+	data := make([]float64, len(m.data))
+	copy(data, m.data)
+	return data
+}
+
+//SetData replaces the inner slice. must have matching sizes
+func (m *M64) SetData(data []float64) error {
+	size := m.Size()
+	if len(data) != size {
+		return fmt.Errorf("invalid size: data must have %d values", size)
+	}
+	copy(m.data, data)
+	//m.data = data
+	return nil
 }
 
 //Add adds n to m (element by element)
@@ -116,25 +155,4 @@ func (m *M64) MapElem(fn func(x float64) float64) error {
 //AtInd returns the value at index ind. panics if m is nil or index out of range
 func (m *M64) AtInd(ind int) float64 {
 	return m.data[ind]
-}
-
-//GetData returns inner matrix
-func (m *M64) GetData() []float64 {
-	if m == nil {
-		return nil
-	}
-	return m.data
-}
-
-//SetData sets inner matrix
-func (m *M64) SetData(data []float64) error {
-	if m == nil {
-		return fmt.Errorf("matrix is nil")
-	}
-	exp := m.Size()
-	if len(data) != exp {
-		return fmt.Errorf("data must have %d values", exp)
-	}
-	m.data = data
-	return nil
 }
