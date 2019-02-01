@@ -60,12 +60,12 @@ func (m *M64) Valid() bool {
 		return false
 	}
 	if m.r <= 0 {
-		m.r = 1
+		return false
 	}
 	if m.c <= 0 {
-		m.c = 1
+		return false
 	}
-	s := m.r * m.c
+	s := m.Size()
 	if len(m.data) != s {
 		m.data = make([]float64, s)
 	}

@@ -26,10 +26,12 @@ func mul(m, n, dest *M64) error {
 	}
 	sum := 0.0
 	i, j, k := 0, 0, 0
-	for i = 0; i < m.r; i++ {
-		for j = 0; j < n.c; j++ {
+	mr, mc := m.Dims()
+	_, nc := n.Dims()
+	for i = 0; i < mr; i++ {
+		for j = 0; j < nc; j++ {
 			sum = 0.0
-			for k = 0; k < m.c; k++ {
+			for k = 0; k < mc; k++ {
 				sum += m.At(i, k) * n.At(k, j)
 			}
 			dest.Set(i, j, sum)
@@ -57,8 +59,10 @@ func mulElem(m, n, dest *M64) error {
 		return err
 	}
 	i, j := 0, 0
-	for i = 0; i < m.r; i++ {
-		for j = 0; j < n.c; j++ {
+	mr, _ := m.Dims()
+	_, nc := n.Dims()
+	for i = 0; i < mr; i++ {
+		for j = 0; j < nc; j++ {
 			dest.Set(i, j, m.At(i, j)*n.At(i, j))
 		}
 	}

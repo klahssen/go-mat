@@ -92,6 +92,8 @@ func TestSmallSub(t *testing.T) {
 
 func TestSmallMul(t *testing.T) {
 	te := tester.New(t)
+	m := NewM64(1, 3, []float64{1, 2, 3})
+	m.Transpose()
 	tests := []struct {
 		m    *M64
 		n    *M64
@@ -108,6 +110,7 @@ func TestSmallMul(t *testing.T) {
 		{NewM64(3, 2, nil), NewM64(3, 3, nil), NewM64(3, 2, nil), NewM64(3, 3, nil), fmt.Errorf("m colomns != n rows")},
 		{NewM64(3, 2, []float64{1, 1, 1, 1, 1, 1}), NewM64(2, 3, []float64{1, 1, 1, 1, 1, 1}), NewM64(3, 3, []float64{2, 2, 2, 2, 2, 2, 2, 2, 2}), NewM64(3, 3, []float64{2, 2, 2, 2, 2, 2, 2, 2, 2}), nil},
 		{NewM64(3, 3, []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}), NewM64(3, 1, []float64{1, 2, 3}), NewM64(3, 1, nil), NewM64(3, 1, []float64{6, 6, 6}), nil},
+		{NewM64(3, 3, []float64{1, 1, 1, 1, 1, 1, 1, 1, 1}), m, NewM64(3, 1, nil), NewM64(3, 1, []float64{6, 6, 6}), nil},
 	}
 
 	for ind, test := range tests {
