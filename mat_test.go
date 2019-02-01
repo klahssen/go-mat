@@ -27,8 +27,6 @@ func TestIndex(t *testing.T) {
 	}
 }
 
-//git commit -m "added no-touch transposer"
-
 func TestAt(t *testing.T) {
 	te := tester.New(t)
 	m := NewM64(3, 3, []float64{1, 2, 3, 4, 5, 6, 7, 8, 9})

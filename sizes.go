@@ -12,13 +12,16 @@ func dotSize(m, n, dest *M64) error {
 	if !dest.Valid() {
 		return fmt.Errorf("dest is nil")
 	}
-	if m.c != n.r {
+	mr, mc := m.Dims()
+	nr, nc := n.Dims()
+	dr, dc := dest.Dims()
+	if mc != nr {
 		return fmt.Errorf("m colomns != n rows")
 	}
-	if dest.r != m.r {
+	if dr != mr {
 		return fmt.Errorf("m,dest rows not equal")
 	}
-	if dest.c != n.c {
+	if dc != nc {
 		return fmt.Errorf("n,dest colomns not equal")
 	}
 	return nil
@@ -34,16 +37,19 @@ func sameSize(m, n, dest *M64) error {
 	if !dest.Valid() {
 		return fmt.Errorf("dest is nil")
 	}
-	if m.r != n.r {
+	mr, mc := m.Dims()
+	nr, nc := n.Dims()
+	dr, dc := dest.Dims()
+	if mr != nr {
 		return fmt.Errorf("m,n rows not equal")
 	}
-	if m.c != n.c {
+	if mc != nc {
 		return fmt.Errorf("m,n colomns not equal")
 	}
-	if m.r != dest.r {
+	if mr != dr {
 		return fmt.Errorf("m,dest rows not equal")
 	}
-	if m.c != dest.c {
+	if mc != dc {
 		return fmt.Errorf("m,dest colomns not equal")
 	}
 	return nil
@@ -56,11 +62,12 @@ func sameSize2(m, dest *M64) error {
 	if !dest.Valid() {
 		return fmt.Errorf("dest is nil")
 	}
-
-	if m.r != dest.r {
+	mr, mc := m.Dims()
+	dr, dc := dest.Dims()
+	if mr != dr {
 		return fmt.Errorf("m,dest rows not equal")
 	}
-	if m.c != dest.c {
+	if mc != dc {
 		return fmt.Errorf("m,dest colomns not equal")
 	}
 	return nil
@@ -73,11 +80,13 @@ func inverseSize(m, dest *M64) error {
 	if !dest.Valid() {
 		return fmt.Errorf("dest is nil")
 	}
+	mr, mc := m.Dims()
+	dr, dc := dest.Dims()
 
-	if m.r != dest.c {
+	if mr != dc {
 		return fmt.Errorf("m rows != dest colomns")
 	}
-	if m.c != dest.r {
+	if mc != dr {
 		return fmt.Errorf("m colomns != dest rows")
 	}
 	return nil
